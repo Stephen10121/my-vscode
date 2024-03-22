@@ -5,6 +5,7 @@
     import Fullscreen  from "./customIcons/Fullscreen.svelte";
     import NotFullscreen  from "./customIcons/NotFullscreen.svelte";
     import { Fun } from "../../wailsjs/go/main/App.js";
+    import Dash from './customIcons/Dash.svelte';
 
     let md = false;
     let resiser: HTMLDivElement;
@@ -40,7 +41,7 @@
 <section>
     <div bind:this={resiser} class="resiser" style="--wails-draggable:drag" on:dblclick={() => {WindowToggleMaximise();md=false;changeMaximiseButton()}} on:mousemove={mouseMoving} on:mousedown={() => md=true} />
     <button class="windowActionButton" on:click={Fun} title="Close">
-        <img src={closeIcon} alt="Close Window" />
+        <Dash />
     </button>
     <button class="windowActionButton" on:click={() => {WindowToggleMaximise();changeMaximiseButton();}} title="Close">
         {#if windowsIsMinimised}
@@ -103,7 +104,7 @@
 
     .windowActionButton img {
         width: 20px;
-        filter: invert(0.4);
+        filter: invert(0.6);
         transition: filter 0.1s linear;
     }
 
