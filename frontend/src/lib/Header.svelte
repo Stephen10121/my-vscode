@@ -1,58 +1,37 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { Quit, WindowIsMaximised, WindowUnmaximise, WindowToggleMaximise } from '../../wailsjs/runtime/runtime.js';
-    import closeIcon from "../assets/icons/close.svg";
-    import Fullscreen  from "./customIcons/Fullscreen.svelte";
-    import NotFullscreen  from "./customIcons/NotFullscreen.svelte";
-    import { Fun } from "../../wailsjs/go/main/App.js";
-    import Dash from './customIcons/Dash.svelte';
+    import { WindowIsMaximised, WindowUnmaximise, WindowToggleMaximise } from '../../wailsjs/runtime/runtime.js';
+    import WindowActions from './WindowActions.svelte';
+    import { windowsIsMinimised } from './store.js';
 
     let md = false;
     let resiser: HTMLDivElement;
-    let windowsIsMinimised = true;
-
-    function changeMaximiseButton() {
-        setTimeout(() => {
-            WindowIsMaximised().then((data) => {
-                windowsIsMinimised = !data;
-            });
-        }, 10);
-    }
 
     function mouseMoving() {
         if (!md) return;
 
         WindowIsMaximised().then((data) => {
             if (data) {
-                windowsIsMinimised = false;
+                $windowsIsMinimised = false;
                 WindowUnmaximise();
             }
-            windowsIsMinimised = true;
+            $windowsIsMinimised = true;
             md=false;
         });
     }
 
+    function changeMaximiseButton() {
+        setTimeout(() => {
+            WindowIsMaximised().then((data) => {
+                $windowsIsMinimised = !data;
+            });
+        }, 10);
+    }
 
-    onMount(() => {
-        changeMaximiseButton();
-    });
 </script>
 
 <section>
     <div bind:this={resiser} class="resiser" style="--wails-draggable:drag" on:dblclick={() => {WindowToggleMaximise();md=false;changeMaximiseButton()}} on:mousemove={mouseMoving} on:mousedown={() => md=true} />
-    <button class="windowActionButton" on:click={Fun} title="Close">
-        <Dash />
-    </button>
-    <button class="windowActionButton" on:click={() => {WindowToggleMaximise();changeMaximiseButton();}} title="Close">
-        {#if windowsIsMinimised}
-            <Fullscreen />
-        {:else}
-            <NotFullscreen />
-        {/if}
-    </button>
-    <button class="windowActionButton red" on:click={Quit} title="Close">
-        <img src={closeIcon} alt="Close Window" />
-    </button>
+    <WindowActions />
 </section>
 
 <style>
@@ -81,35 +60,4 @@
         -ms-user-select: auto !important; /* IE10+/Edge */
         user-select: auto !important;
     }
-
-    .windowActionButton {
-        width: 46px;
-        height: 100%;
-        background: none;
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding-right: 2px;
-        transition: background-color 0.1s linear;
-    }
-
-    .windowActionButton.red:hover {
-        background-color: #ff0000;
-    }
-
-    .windowActionButton:hover {
-        background-color: #80808050;
-    }
-
-    .windowActionButton img {
-        width: 20px;
-        filter: invert(0.6);
-        transition: filter 0.1s linear;
-    }
-
-    .windowActionButton.red:hover img {
-        filter: invert(1);
-    }
-
 </style>
