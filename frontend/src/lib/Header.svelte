@@ -1,5 +1,6 @@
 <script lang="ts">
     import { WindowIsMaximised, WindowUnmaximise, WindowToggleMaximise } from '../../wailsjs/runtime/runtime.js';
+    import LeftHeader from './LeftHeader.svelte';
     import WindowActions from './WindowActions.svelte';
     import { windowsIsMinimised } from './store.js';
 
@@ -30,6 +31,7 @@
 </script>
 
 <section>
+    <LeftHeader />
     <div bind:this={resiser} class="resiser" style="--wails-draggable:drag" on:dblclick={() => {WindowToggleMaximise();md=false;changeMaximiseButton()}} on:mousemove={mouseMoving} on:mousedown={() => md=true} />
     <WindowActions />
 </section>
@@ -45,7 +47,7 @@
 
         display: flex;
         flex-direction: row;
-        justify-content: flex-end;
+        justify-content: space-between;
     }
 
     .resiser {
